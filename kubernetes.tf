@@ -44,3 +44,65 @@ provider "kubernetes" {
   }
 }
 
+resource "kubernetes_deployment" "nginx" {
+  metadata {
+    name = "ran-bp-nginx"
+    labels = {
+      App = "HelloWorld"
+    }
+  }
+
+  spec {
+    replicas = 2
+    selector {
+      match_labels = {
+        App = "HelloWorld"
+      }
+    }
+    template {
+      metadata {
+        labels = {
+          App = "HelloWorld"
+        }
+      }
+      spec {
+        container {
+          image = "ranra96/bp_nginx_ran:latest"
+          name  = "bp-nginx"
+
+          port {
+            container_port = 80
+          }
+
+          resources {
+            limits = {
+              cpu    = "0.5"
+              memory = "512Mi"
+            }
+            requests = {
+              cpu    = "250m"
+              memory = "50Mi"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_service" "nginx" {
+  metadata {
+    name = "bp-ran-nginx"
+  }
+  spec {
+    selector = {
+      App = kubernetes_deployment.nginx.spec.0.template.0.metadata[0].labels.App
+    }
+    port {
+      port        = 80
+      target_port = 80
+    }
+
+    type = "LoadBalancer"
+  }
+}

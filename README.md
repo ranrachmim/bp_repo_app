@@ -9,3 +9,6 @@ Terraform configuration files to provision a K8s deployment and service on AWS E
 ## Requierments
 1. AWS EKS Cluster
 2. a configured AWS CLI
+
+## Required Variable
+`backend_path` -- The path for the EKS terraform state file

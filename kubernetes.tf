@@ -21,7 +21,7 @@ data "terraform_remote_state" "eks" {
   backend = "local"
 
   config = {
-    path = "var.backend_path"
+    path = var.backend_path
   }
 }
 

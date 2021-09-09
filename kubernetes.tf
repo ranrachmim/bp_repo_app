@@ -12,11 +12,16 @@ terraform {
   }
 }
 
+variable "backend_path" {
+  type        = string
+  description = "The path for the EKS terraform state file."
+}
+
 data "terraform_remote_state" "eks" {
   backend = "local"
 
   config = {
-    path = "../bp_repo_infra/terraform.tfstate"
+    path = "var.backend_path"
   }
 }
 
